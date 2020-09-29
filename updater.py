@@ -10,13 +10,13 @@ def exec(command):
     return out, err
 
 def update_target(branch):
-    c = exec(['git', 'checkout', branch])
+    c = exec(git_command('checkout {0}'.format(branch)))
     log.info('checkout to target branch: {0}'.format(branch))
-    pull = exec(['git', 'pull'])
+    pull = exec(git_command('pull'))
     log_output(pull)
-    merge = exec(['git', 'pull', 'origin', MASTER, '--no-edit'])
+    merge = exec(git_command('pull origin {0} --no-edit'.format(MASTER)))
     log_output(merge)
-    push = exec(['git', 'push'])
+    push = exec(git_command('push'))
     log_output(push)
 
 def log_output(output):
@@ -25,6 +25,12 @@ def log_output(output):
         log.info(out)
     if err:
         log.error(err)
+
+def git_command(command):
+    command = command.split()
+    command = ['git', *command]
+    log.info('Prepare command {0}'.format(command))
+    return command
 
 def config():
     data = {}
